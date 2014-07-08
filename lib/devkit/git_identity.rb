@@ -4,11 +4,11 @@ module Devkit
   module GitIdentity
     class << self
       def check(identity)
-        config = identity["Full Name"] == %x[git config --global user.name].chomp &&
+        config_ok = identity["Full Name"] == %x[git config --global user.name].chomp &&
             identity["Email"] == %x[git config --global user.email].chomp &&
             identity["Github Id"] == %x[git config --global github.user].chomp
 
-        if config
+        if config_ok
           puts "Git config switch successfull.".green
         else
           puts "Problem switching to #{identity['Full Name']}.".red

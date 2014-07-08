@@ -10,7 +10,8 @@ module Devkit
         puts Devkit::Core.identities.to_yaml
       end
 
-      def remove!(nick_name)
+      def remove!(options)
+        nick_name = options[:nick_name]
         existing_identities = Devkit::Core.identities
         identity = existing_identities[nick_name]
         if identity && agree("Are you sure you want to delete #{identity['Full Name']} (y/n)?", true)
@@ -25,7 +26,8 @@ module Devkit
         end
       end
 
-      def choose!(nick_name)
+      def choose!(options)
+        nick_name = options[:nick_name]
         identity = Devkit::Core.identities[nick_name]
         if identity
           Devkit::GitIdentity.choose(identity)

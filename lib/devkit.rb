@@ -9,6 +9,7 @@ require 'devkit/version'
 module Devkit
   EXPIRY_TIME = 14400
   DEVKIT_FILE_PATH = File.expand_path('~/.devkit')
+  DEVKIT_REMOTE_FILE_PATH = File.expand_path('~/.devkit_url')
 
   class << self
     def bin_path

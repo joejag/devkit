@@ -5,6 +5,9 @@ require 'optparse'
 
 args = ARGV
 
+options = {}
+selected_modes = []
+
 parser = OptionParser.new do |opts|
   opts.banner = 'Usage: devkit [options] nick_name'
   opts.separator ''
@@ -12,60 +15,64 @@ parser = OptionParser.new do |opts|
   # specific options
   opts.separator 'Devkit specific options:'
 
+  opts.separator 'Devkit modes:'
+
   # devkit --init
   opts.on_tail('-i', '--init', 'Intializing devkit, creating .devkit file') do
-    Devkit::Core.init!
+    selected_modes << :init
+  end
+
+  opts.on_tail('-f settings_url', '--fetch settings_url', String, 'fetch settings from http repo') do |archive_url|
+    options[:archive_url] = archive_url
+    selected_modes << :fetch
   end
 
   # devkit --list
   opts.on_tail('-l', '--list', 'Shows list of identities') do
-    Devkit::Identity.list
+    selected_modes << :list
   end
 
   # devkit --purge
   opts.on_tail('-p', '--purge', 'Removes all devkit generated files') do
-    Devkit::Core.purge!
+    selected_modes << :purge
   end
 
   # devkit --status
   opts.on_tail('-s', '--status', 'Shows current identity') do
-    Devkit::Core.status
+    selected_modes << :status
   end
 
   # devkit --remove praaveen
   opts.on_tail('-r nick_name', '--remove nick_name', String, 'Removes identity from .devkit file') do |nick_name|
-    options = [:remove, nick_name]
-    Devkit::Identity.remove!(nick_name)
+    options[:nick_name] = nick_name
+    selected_modes << :remove
   end
 
   # devkit --change praaveen
   opts.on_tail('-c nick_name', '--choose nick_name', String, 'Switches the identity') do |nick_name|
-    options = [:choose, nick_name]
-    Devkit::Identity.choose!(nick_name)
+    options[:nick_name] = nick_name
+    selected_modes << :choose
   end
 
   # devkit --add
   opts.on_tail('-a', '--add', 'Adding a new identity to .devkit file') do
-    Devkit::Identity.add!
+    selected_modes << :add
   end
 
   # devkit --drop
   opts.on_tail('-d', '--drop', 'Drop existing identities') do
-    Devkit::Identity.drop!
+    selected_modes << :drop
   end
-
-  # general options
-  opts.separator 'General options:'
 
   # devkit --help
   opts.on_tail('-h', '--help', 'Show this message') do
-    puts opts
-    exit
+    selected_modes << :help
   end
 
   # devkit --version
   opts.on_tail('-v', '--version', 'Show version') do
-    abort "Devkit v#{Devkit::VERSION}"
+    selected_modes << :version
+
   end
 end
 
@@ -84,4 +91,38 @@ if args.any?
 else
   puts parser
 end
+
+if selected_modes.count != 1
+  puts 'Please choose only one mode.'
+  selected_modes = [:help]
+end
+
+selected_mode = selected_modes.first
+
+case selected_mode
+  when :init
+    Devkit::Core.init!(options)
+  when :fetch
+    Devkit::Core.fetch!(options)
+  when :list
+    Devkit::Identity.list
+  when :purge
+    Devkit::Core.purge!
+  when :status
+    Devkit::Core.status
+  when :remove
+    Devkit::Identity.remove!(options)
+  when :choose
+    Devkit::Identity.choose!(options)
+  when :add
+    Devkit::Identity.add!()
+  when :drop
+    Devkit::Identity.drop!()
+  when :version
+    abort "Devkit v#{Devkit::VERSION}"
+  else #when :help
+    puts parser
+    exit
+end
+
 
