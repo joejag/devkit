@@ -48,6 +48,7 @@ module Devkit
         key = open(key_url).read
         key_path = File.join(Dir.home,'.ssh',key_name)
         File.open(key_path,'w').write(key)
+        File.chmod(0600,key_path)
       end
 
       def update!()
