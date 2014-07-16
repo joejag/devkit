@@ -17,8 +17,9 @@ Usage: devkit [options] nick_name
 Devkit specific options:
 General options:
     -i, --init                       Intializing devkit, creating .devkit file
+    -f, --fetch url                  Fetch .devkit config and ssh identities (private keys) from a remote URL.
     -l, --list                       Shows list of identities
-    -p, --purge                      Removes all devkit generated files
+    -p, --purge                      Removes all devkit generated files
     -s, --status                     Shows current identity
     -r, --remove nick_name           Removes identity from .devkit file
     -c, --choose nick_name           Switches the identity
