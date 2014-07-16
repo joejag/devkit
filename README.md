@@ -29,6 +29,12 @@ General options:
     -v, --version                    Show version
 ```
 
+#### Notes on "Fetch" functionality
+
+The fetch option allows you to maintain a centralised config for your development team - this is useful if your team are moving from machine to machine. Specify the URL of the devkit file and it will download and save it to your home directory as .devkit. It will also iterate through all identities and try to download them from the same HTTP directory.
+
+**It's of critical importance that any ssh identities shared in this way are passphrase protected**
+
 ### Credits
 
 ### Maintainers
