@@ -2,6 +2,7 @@ require 'yaml'
 require 'highline/import'
 require 'open-uri'
 
+
 module Devkit
   class Core
     class << self
@@ -33,15 +34,14 @@ module Devkit
 
         url_base = File.dirname(archive_url)
 
-        config_from_remote.each do |nick_name,config_data|
+        parallel_each(config_from_remote) do |nick_name,config_data|
           ssh_id = config_data['SSH Identity']
           key_url = "#{url_base}/#{ssh_id}"
 
-          puts "Fetching key for #{nick_name} from #{key_url}"
+          print "\nFetching key for #{nick_name} from #{key_url}"
 
           fetch_private_key(key_url,ssh_id)
-        end
-
+        end 
       end
 
       def fetch_private_key(key_url,key_name)
@@ -91,6 +91,16 @@ module Devkit
 
       def check_if_remote_file_exists?
         File.exists?(DEVKIT_REMOTE_FILE_PATH)
+      end
+
+      def parallel_each(hash)
+        threads =[]
+        hash.each do |key, value|
+          threads << Thread.new do
+            yield(key, value)
+          end
+        end
+        threads.each(&:join)
       end
     end
   end
