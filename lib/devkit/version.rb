@@ -1,3 +1,3 @@
 module Devkit
-  VERSION = "0.1.LocalBuild"
+  VERSION = "0.1.5"
 end
